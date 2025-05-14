@@ -4,34 +4,42 @@
 
 <h1 align="center">🫡 Welcome 🫡</h1>
 <!-- <h3 align="center">A passionate Computer Engineer from South Africa</h3> -->
-<div align="justify" style="display: flex; align-items: center;">
 
-<div style="flex: 1;">
+<img 
+    src="https://media1.tenor.com/m/Z_Ah8rkdZ4YAAAAd/walking-code.gif" 
+    alt="Walking Man" 
+    width="120" 
+    style= "margin-left: 24px; 
+            margin-top: 10px; 
+            margin-bottom: 10px;" 
+    align="right"/>
+
+<div align="justify">
 
 I am <code>Stefan Oberholzer</code>, a Computer Engineer driven by a passion for solving complex engineering challenges. I am currently exploring opportunities in embedded systems or software development, with a strong focus on engineering problem-solving.
 
 I have experience in a variety of programming languages, including Python for rapid development and C++ for low-level projects. I am eager to expand my skill set and take on new challenges, particularly in fields like embedded systems and software engineering.
-I have experience in a variety of programming languages, including Python for rapid development and C++ for low-level projects. I am eager to expand my skill set and take on new challenges, particularly in fields like embedded systems and software engineering.
 
 Feel free to check out my work. I am open to discussing new projects or opportunities.
-</div>
-
-<img src="https://media1.tenor.com/m/Z_Ah8rkdZ4YAAAAd/walking-code.gif" alt="Walking Man" width="120" style="margin-left: 24px;" align="right"/>
 
 </div>
 
 <!-- Email Address (Left) and Profile Views (Right) -->
 <div align="left" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
     <a href="mailto:stefanus.oberholzer@gmail.com">
-        <img src="https://img.shields.io/badge/Gmail-stefanus.oberholzer@gmail.com-red?style=flat&logo=gmail&logoColor=white" alt="Gmail" />
+        <img 
+            src="https://img.shields.io/badge/Gmail-stefanus.oberholzer@gmail.com-red?style=flat&logo=gmail&logoColor=white" alt="Gmail" />
     </a>
     <span style="flex:1"></span>
-    <img src="https://komarev.com/ghpvc/?username=stefanobie&label=Profile%20views&color=0e75b6&style=flat" alt="stefanobie" align="right" />
+    <img 
+        src="https://komarev.com/ghpvc/?username=stefanobie&label=Profile%20views&color=0e75b6&style=flat" 
+        alt="StefanObie"
+        style="margin-right: 10px;" 
+        align="right" />
 </div>
 
 <!-- Trophy Case
 <p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=stefanobie" alt="stefanobie" /></a> </p> -->
-
 
 <!-- <h3 align="left">Connect with me:</h3>
 <p align="left">
