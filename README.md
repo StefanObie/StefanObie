@@ -9,7 +9,7 @@
     src="https://media1.tenor.com/m/Z_Ah8rkdZ4YAAAAd/walking-code.gif" 
     alt="Walking Man" 
     width="150" 
-    style="margin-left: 24px;"
+    style="margin-left: 10px; margin-bottom: 10px"
     align="right"
 />
 
