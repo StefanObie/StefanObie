@@ -21,8 +21,12 @@ jobs:
       - name: Install plotly and dependencies
         run: pip install numpy pandas requests plotly kaleido
 
-      - name: Generate heatmap
+      - name: Generate Heatmap
         run: python heatmap.py
+        env:
+          STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
+          STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
+          STRAVA_REFRESH_TOKEN: ${{ secrets.STRAVA_REFRESH_TOKEN }}
 
       - name: Commit changes
         run: |
