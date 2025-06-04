@@ -10,7 +10,6 @@ import plotly.graph_objects as go
 def get_activities_from_file():
     df = pd.read_csv("strava_data/strava_activities.csv")
     print(f"Loaded {len(df)} activities from file.")
-
     return df.to_dict(orient='records')
 
 def get_access_token():
@@ -34,8 +33,13 @@ def get_access_token():
 def get_activities_from_strava():
     url = "https://www.strava.com/api/v3/athlete/activities"
     headers = {"Authorization": f"Bearer {get_access_token()}"}
+
+    # Activities from the last 365 days, fetched from a Monday to avoid partial weeks
+    last_monday = datetime.now() - pd.DateOffset(days=datetime.now().weekday())
+    last_monday = last_monday.replace(hour=0, minute=0, second=0, microsecond=0)
+    after_param = int(last_monday.timestamp()) - 365*24*60*60
     params = {  
-        "after": int(datetime.now().timestamp()) - 365*24*60*60,  # Last year 
+        "after": after_param,
         "per_page": 200, 
         "page": 1
     }
@@ -127,7 +131,6 @@ def plot_heatmap(df):
         height=200,
     )
 
-    # fig.write_html("images/running_heatmap.html")
     if RUN_LOCALLY:
         fig.show()
     else:
