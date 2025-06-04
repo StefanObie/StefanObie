@@ -1,15 +1,30 @@
-# generate_plot.py
-import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 import numpy as np
 from datetime import datetime
 
-x = np.linspace(0, 10, 100)
-y = np.sin(x) + np.random.normal(0, 0.2, size=100)
+# Create random heatmap data
+z = np.random.rand(7, 53)  # 7 rows (days), 53 cols (weeks)
 
-plt.figure(figsize=(6, 3))
-plt.plot(x, y, label='Randomized Sine')
-plt.title(f'Auto-updated Plot ({datetime.now().strftime("%Y-%m-%d %H:%M:%S")})')
-plt.legend()
-plt.tight_layout()
-plt.savefig("random_plot.png", dpi=100)
-plt.close()
+# Timestamp for title
+timestamp = datetime.now()#.strftime("%Y-%m-%d %H:%M UTC")
+
+# Create heatmap figure
+fig = go.Figure(data=go.Heatmap(
+    z=z,
+    colorscale='YlOrRd',
+    xgap=1,
+    ygap=1,
+    colorbar=dict(title='Value')
+))
+
+# Update layout with title
+fig.update_layout(
+    title=f"🗓️ Random Heatmap - {timestamp}",
+    margin=dict(t=50, l=20, r=20, b=20),
+    width=800,
+    height=200
+)
+
+# Save as SVG
+# fig.show()
+fig.write_image("random_heatmap.svg")

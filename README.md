@@ -23,7 +23,7 @@ I have experience in a variety of programming languages, including Python for ra
 </p>
 
 # 📈 Auto-Updating Demo
-![Random Plot](random_plot.png)
+![Random Plot](random_heatmap.svg)
 
 Feel free to personally reach out to me to discuss new projects or opportunities.
 
