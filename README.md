@@ -19,11 +19,11 @@ I have experience in a variety of programming languages, including Python for ra
 
 <!-- Running Heatmap (Last 365 Days) -->
 <p align="center">
-  <img src="running_heatmap.svg" alt="Running Heatmap" width="100%" />
+  <img src="images/running_heatmap.svg" alt="Running Heatmap" width="100%" />
 </p>
 
 # 📈 Auto-Updating Demo
-![Random Plot](random_heatmap.svg)
+![Random Plot](images/random_heatmap.svg)
 
 Feel free to personally reach out to me to discuss new projects or opportunities.
 

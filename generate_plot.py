@@ -27,4 +27,4 @@ fig.update_layout(
 
 # Save as SVG
 # fig.show()
-fig.write_image("random_heatmap.svg")
+fig.write_image("images/random_heatmap.svg")
