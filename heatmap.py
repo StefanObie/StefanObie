@@ -138,7 +138,7 @@ def plot_heatmap(df):
     
     fig.write_html("docs/running_heatmap.html")
 
-RUN_LOCALLY = True
+RUN_LOCALLY = False
 
 if __name__ == "__main__":
     if RUN_LOCALLY:
