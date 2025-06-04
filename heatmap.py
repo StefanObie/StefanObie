@@ -7,6 +7,12 @@ from collections import defaultdict
 import plotly.graph_objects as go
 
 
+def get_activities_from_file():
+    df = pd.read_csv("strava_data/strava_activities.csv")
+    print(f"Loaded {len(df)} activities from file.")
+
+    return df.to_dict(orient='records')
+
 def get_access_token():
     client_id = os.getenv("STRAVA_CLIENT_ID")
     client_secret = os.getenv("STRAVA_CLIENT_SECRET")
@@ -25,7 +31,7 @@ def get_access_token():
     tokens = response.json()
     return tokens["access_token"]
 
-def get_all_activities():
+def get_activities_from_strava():
     url = "https://www.strava.com/api/v3/athlete/activities"
     headers = {"Authorization": f"Bearer {get_access_token()}"}
     params = {  
@@ -33,15 +39,6 @@ def get_all_activities():
         "per_page": 200, 
         "page": 1
     }
-
-    if False: # Read from file
-        try:
-            df = pd.read_csv("strava_activities.csv")
-            print(f"Loaded {len(df)} activities from strava_activities.csv")
-            return df.to_dict(orient='records')
-        except FileNotFoundError:
-            print("strava_activities.csv not found, fetching from Strava API...")
-
 
     all_activities = []
     for page in range(1, 100):
@@ -55,10 +52,6 @@ def get_all_activities():
         if not data:
             break
         all_activities.extend(data)
-
-    # Save the activities to a CSV file
-    # df = pd.DataFrame(all_activities)
-    # df.to_csv("strava_activities.csv", index=False)
 
     print(f"Total activities fetched: {len(all_activities)}")
     return all_activities
@@ -74,8 +67,7 @@ def group_by_day(activities):
 
     df = pd.DataFrame(list(daily_distances.items()), columns=["date", "distance"])
     df["date"] = pd.to_datetime(df["date"])
-    df = df.sort_index()
-    print(df.head())
+    df = df.sort_values(by='date')
 
     df['day_of_week'] = df['date'].dt.weekday  # 0 = Monday
     df['week'] = ((df['date'] - df['date'].min()).dt.days // 7)
@@ -135,20 +127,19 @@ def plot_heatmap(df):
         height=200,
     )
 
-    # fig.write_html("running_heatmap.html")
-    fig.write_image("images/running_heatmap.svg")  # Requires kaleido: pip install -U kaleido
-    # fig.show()
+    # fig.write_html("images/running_heatmap.html")
+    if RUN_LOCALLY:
+        fig.show()
+    else:
+        fig.write_image("images/running_heatmap.svg")
+
+RUN_LOCALLY = False
 
 if __name__ == "__main__":
-    df = group_by_day(get_all_activities())
-    plot_heatmap(df)
+    if RUN_LOCALLY:
+        act = get_activities_from_file()
+    else:
+        act = get_activities_from_strava()
 
-    # fig = plt.figure(figsize=(10, 4))
-    # plt.plot(df['date'], df['distance'], marker='o', linestyle='-', color='b')
-    # plt.title("Running Distance Over Time")
-    # plt.xlabel("Date")
-    # plt.ylabel("Distance (km)")
-    # plt.xticks(rotation=45)
-    # plt.tight_layout()
-    # plt.savefig("running_distance_over_time.svg", format='svg')
-    # print("Line graph saved as running_distance_over_time.svg.")
+    df = group_by_day(act)
+    plot_heatmap(df)
