@@ -19,7 +19,7 @@ jobs:
           python-version: '3.10'
 
       - name: Install plotly and dependencies
-        run: pip install numpy pandas datetime collections requests plotly kaleido
+        run: pip install numpy pandas requests plotly kaleido
 
       - name: Generate heatmap
         run: python heatmap.py
