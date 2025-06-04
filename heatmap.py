@@ -136,7 +136,7 @@ def plot_heatmap(df):
     )
 
     # fig.write_html("running_heatmap.html")
-    fig.write_image("running_heatmap.svg")  # Requires kaleido: pip install -U kaleido
+    fig.write_image("images/running_heatmap.svg")  # Requires kaleido: pip install -U kaleido
     # fig.show()
 
 if __name__ == "__main__":
