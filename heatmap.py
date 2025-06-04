@@ -133,9 +133,10 @@ def plot_heatmap(df):
 
     if RUN_LOCALLY:
         fig.show()
-        fig.write_html("images/running_heatmap.html")
     else:
         fig.write_image("images/running_heatmap.svg")
+    
+    fig.write_html("docs/running_heatmap.html")
 
 RUN_LOCALLY = True
 
