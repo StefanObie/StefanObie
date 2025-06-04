@@ -1,8 +1,8 @@
-name: Update Random Plot
+name: Update Heatmap
 
 on:
-  schedule:
-    - cron: "*/5 * * * *"  # every 5 minutes
+  schedule: 
+    - cron: '0 2 * * *'    # every day at 02:00 UTC
   workflow_dispatch:       # allow manual trigger
 
 jobs:
@@ -19,15 +19,15 @@ jobs:
           python-version: '3.10'
 
       - name: Install plotly and dependencies
-        run: pip install plotly kaleido numpy
+        run: pip install numpy pandas datetime collections requests plotly kaleido
 
-      - name: Generate plot
-        run: python generate_plot.py
+      - name: Generate heatmap
+        run: python heatmap.py
 
       - name: Commit changes
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
-          git add images/random_heatmap.svg README.md
-          git commit -m "Auto-update random plot" || echo "No changes to commit"
+          git add images/running_heatmap.svg
+          git commit -m "Auto-Update Running Heatmap" || echo "No changes to commit"
           git push

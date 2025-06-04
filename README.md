@@ -22,10 +22,10 @@ I have experience in a variety of programming languages, including Python for ra
   <img src="images/running_heatmap.svg" alt="Running Heatmap" width="100%" />
 </p>
 
-# 📈 Auto-Updating Demo
-![Random Plot](images/random_heatmap.svg)
+<!-- # 📈 Auto-Updating Demo
+![Random Plot](images/random_heatmap.svg) -->
 
-Feel free to personally reach out to me to discuss new projects or opportunities.
+Feel free to reach out to discuss new projects or opportunities.
 
 <br>
 
