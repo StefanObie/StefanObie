@@ -5,28 +5,14 @@
 <h1 align="center">🫡 Welcome 🫡</h1>
 <!-- <h3 align="center">A passionate Computer Engineer from South Africa</h3> -->
 
-<img 
+<!-- Walking Man GIF -->
+<!-- <img 
     src="https://media1.tenor.com/m/Z_Ah8rkdZ4YAAAAd/walking-code.gif" 
     alt="Walking Man" 
     width="150" 
     style="margin-left: 10px; margin-bottom: 10px"
     align="right"
-/>
-
-I am <code>Stefan Oberholzer</code>, a Computer Engineer driven by a passion for solving complex engineering challenges. I am currently exploring opportunities in embedded systems or software development, with a strong focus on engineering problem-solving.
-
-I have experience in a variety of programming languages, including Python for rapid development and C++ for low-level projects. I am eager to expand my skill set and take on new challenges, particularly in fields like embedded systems and software engineering.
-
-<!-- Running Heatmap (Last 365 Days) -->
-<p align="center">
-<a href="https://StefanObie.github.io/StefanObie/running_heatmap.html" target="_">
-    <img src="images/running_heatmap.svg" alt="Running Heatmap" width="100%" />
-</a>
-</p>
-
-Feel free to reach out to discuss new projects or opportunities.
-
-<br>
+/> -->
 
 <!-- Email Address (Left) and Profile Views (Right) -->
 <div align="left" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
@@ -38,20 +24,106 @@ Feel free to reach out to discuss new projects or opportunities.
     <img 
         src="https://komarev.com/ghpvc/?username=stefanobie&label=Profile%20views&color=0e75b6&style=flat" 
         alt="StefanObie"
-        style="margin-right: 15px;" 
+        style="margin-right: 0px;" 
         align="right" />
 </div>
 
+<br>
+
+<p align="justify">
+I am <code>Stefan Oberholzer</code>, a Computer Engineer driven by a passion for solving complex engineering challenges. I am currently exploring opportunities in embedded systems or software development, with a strong focus on engineering problem-solving.
+<br><br>
+I have experience in a variety of programming languages, including Python for rapid development and C++ for low-level projects. I am eager to expand my skill set and take on new challenges, particularly in fields like embedded systems and software engineering.
+<br><br>
+I am also an avid runner. Below is a heatmap of my runs over the past year, built using the Strava API and updated daily.
+</p>
+
+<!-- Running Heatmap (Last 365 Days) -->
+<p align="center">
+<a href="https://StefanObie.github.io/StefanObie/running_heatmap.html" target="_">
+    <img src="images/running_heatmap.svg" alt="Running Heatmap" width="100%" />
+</a>
+</p>
+
+> Click on the heatmap for an interactive version.
+
+Feel free to reach out to discuss new projects or opportunities.
+
+<!-- <h3 align="left">Connect with me:</h3> -->
+<!-- <p align="left">
+<a href="mailto:xxx@xxx.com" target="blank"><img align="center" src="https://img.shields.io/badge/-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail" height="30" width="40" /></a>
+<a href="https://www.strava.com/athletes/xxx" target="blank"><img src="https://img.shields.io/badge/--orange?style=for-the-badge&logo=strava&logoColor=white" alt="Strava" height="30" /></a>
+<a href="https://linkedin.com/in/xxx" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="LinkedIn" height="30" width="40" /></a>
+<a href="https://fb.com/xxx" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook.svg" alt="Facebook" height="30" width="40" /></a>
+<a href="https://instagram.com/xxx" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="Instagram" height="30" width="40" /></a>
+<a href="https://discord.gg/xxx" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/discord.svg" alt="Discord" height="30" width="40" /></a>
+</p> -->
+
+<p align="left">
+    <a href="mailto:xxx@xxx.com" target="_blank">
+        <img src="https://img.shields.io/badge/Gmail-EA4335?style=for-the-badge&logo=gmail&logoColor=white&style=flat&labelColor=EA4335&label=" alt="Gmail" height="30" />
+    </a>
+    <a href="https://linkedin.com/in/xxx" target="_blank">
+        <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white&style=flat&labelColor=0A66C2&label=in" alt="LinkedIn" height="30" />
+    </a>
+    <a href="https://fb.com/xxx" target="_blank">
+        <img src="https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white&style=flat&labelColor=1877F2&label=" alt="Facebook" height="30" />
+    </a>
+    <a href="https://instagram.com/xxx" target="_blank">
+        <img src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&style=flat&logoColor=white&labelColor=E4405F&label=" alt="Instagram" height="30" />
+    </a>
+    <a href="https://discord.gg/xxx" target="_blank">
+        <img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white&style=flat&labelColor=5865F2&label=" alt="Discord" height="30" />
+    </a>
+    <a href="https://www.strava.com/athletes/xxx" target="_blank">
+        <img src="https://img.shields.io/badge/Strava-FC4C02?style=for-the-badge&logo=strava&logoColor=white&style=flat&labelColor=FC4C02&label=" alt="Strava" height="30" />
+    </a>
+    <a href="https://t.me/xxx" target="_blank">
+        <img src="https://img.shields.io/badge/Telegram-229ED9?style=for-the-badge&logo=telegram&logoColor=white&style=flat&labelColor=229ED9&label=" alt="Telegram" height="30" />
+    </a>
+    <a href="https://steamcommunity.com/id/xxx" target="_blank">
+        <img src="https://img.shields.io/badge/Steam-171A21?style=for-the-badge&logo=steam&logoColor=white&style=flat&labelColor=171A21&label=" alt="Steam" height="30" />
+    </a>
+    <a href="https://wa.me/xxxxxxxxxxx" target="_blank">
+        <img src="https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white&style=flat&labelColor=25D366&label=" alt="WhatsApp" height="30" />
+    </a>
+    <a href="https://www.waze.com/ul?preview_venue_id=xxx&navigate=yes" target="_blank">
+        <img src="https://img.shields.io/badge/Waze-33CCFF?style=for-the-badge&logo=waze&logoColor=white&style=flat&labelColor=33CCFF&label=" alt="Waze" height="30" />
+    </a>
+    <a href="https://open.spotify.com/user/xxx" target="_blank">
+        <img src="https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white&style=flat&labelColor=1DB954&label=" alt="Spotify" height="30" />
+    </a>
+    <a href="https://www.youtube.com/@xxx" target="_blank">
+        <img src="https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white&style=flat&labelColor=FF0000&label=" alt="YouTube" height="30" />
+    </a>
+    <a href="https://www.reddit.com/user/xxx" target="_blank">
+        <img src="https://img.shields.io/badge/Reddit-FF4500?style=for-the-badge&logo=reddit&logoColor=white&style=flat&labelColor=FF4500&label=" alt="Reddit" height="30" />
+    </a>
+    <a href="https://slack.com" target="_blank">
+        <img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white&style=flat&labelColor=4A154B&label=" alt="Slack" height="30" />
+    </a>
+    <a href="https://signal.group/#xxx" target="_blank">
+        <img src="https://img.shields.io/badge/Signal-3A76F0?style=for-the-badge&logo=signal&logoColor=white&style=flat&labelColor=3A76F0&label=" alt="Signal" height="30" />
+    </a>
+    <a href="https://www.notion.so/xxx" target="_blank">
+        <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white&style=flat&labelColor=000000&label=" alt="Notion" height="30" />
+    </a>
+    <a href="https://www.snapscan.co.za/" target="_blank">
+        <img src="https://img.shields.io/badge/SnapScan-009FE3?style=for-the-badge&logo=snapchat&logoColor=white&style=flat&labelColor=009FE3&label=" alt="SnapScan" height="30" />
+    </a>
+    <a href="https://www.zapper.com/" target="_blank">
+        <img src="https://img.shields.io/badge/Zapper-0087DC?style=for-the-badge&logo=zapier&logoColor=white&style=flat&labelColor=0087DC&label=" alt="Zapper" height="30" />
+    </a>
+    <a href="https://www.youversion.com/the-bible-app/" target="_blank">
+        <img src="https://img.shields.io/badge/YouVersion-6F4E37?style=for-the-badge&logo=youversion&logoColor=white&style=flat&labelColor=6F4E37&label=📖" alt="YouVersion Bible" height="30" />
+    </a>
+    <a href="https://connect.garmin.com/modern/profile/xxx" target="_blank">
+        <img src="https://img.shields.io/badge/Garmin-007CC3?style=for-the-badge&logo=garmin&logoColor=white&style=flat&labelColor=007CC3&label=" alt="Garmin" height="30" />
+    </a>
+</p>
+
 <!-- Trophy Case
 <p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=stefanobie" alt="stefanobie" /></a> </p> -->
-
-<!-- <h3 align="left">Connect with me:</h3>
-<p align="left">
-<a href="https://linkedin.com/in/stefanoberholzer739" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="stefanoberholzer739" height="30" width="40" /></a>
-<a href="https://fb.com/stefanus oberholzer" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook.svg" alt="stefanus oberholzer" height="30" width="40" /></a>
-<a href="https://instagram.com/oberholzer.stefan" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="oberholzer.stefan" height="30" width="40" /></a>
-<a href="https://discord.gg/steffie2169" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/discord.svg" alt="steffie2169" height="30" width="40" /></a>
-</p> -->
 
 <h3 align="left">Languages and Tools:</h3>
 <p align="left"> 

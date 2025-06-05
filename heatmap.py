@@ -94,11 +94,18 @@ def plot_heatmap(df):
         hoverinfo='text',
         # hoverinfo='skip',
         # colorscale='YlOrRd',  # Yellow to Red
-        colorscale=[
-            [0, 'lightgrey'],   # 0 km = light grey
-            [0.01, 'rgb(255,255,204)'],  # start of YlOrRd
-            [1, 'rgb(200,0,38)']         # end of YlOrRd
-        ],
+        # colorscale='Blues',  # Blue shades
+        # colorscale='Greens',  # Green shades
+        colorscale='Reds',  # Red shades
+        # More options: 'Viridis', 'Cividis', 'Magma', 'Inferno'
+        # colorscale='Magma',
+        # reverse the color scale
+        # reversescale=True,
+        # colorscale=[
+        #     [0, 'lightgrey'],   # 0 km = light grey
+        #     [0.01, 'rgb(255,255,204)'],  # start of YlOrRd
+        #     [1, 'rgb(200,0,38)']         # end of YlOrRd
+        # ],
         showscale=True,
         xgap=2,
         ygap=2,
@@ -107,9 +114,10 @@ def plot_heatmap(df):
 
     fig.update_layout(
         title={
-            'text': '🏃 Running Heatmap - Last 365 Days',
+            'text': '🏃 Running Distance Heatmap - Past Year 🏃',
             'x': 0.5,
-            'xanchor': 'center'
+            'xanchor': 'center',
+            'font': dict(size=24),
         },
         yaxis=dict(
             tickmode='array',
@@ -138,7 +146,7 @@ def plot_heatmap(df):
     
     fig.write_html("docs/running_heatmap.html")
 
-RUN_LOCALLY = False
+RUN_LOCALLY = True
 
 if __name__ == "__main__":
     if RUN_LOCALLY:
