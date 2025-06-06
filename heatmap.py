@@ -60,7 +60,7 @@ def get_activities_from_strava():
     print(f"Total activities fetched: {len(all_activities)}")
     return all_activities
 
-def group_by_day(activities):
+def group_by_day(activities, run_locally=False):
     daily_distances = defaultdict(float)
     for activity in activities:
         if activity["type"] != "Run":
@@ -139,20 +139,19 @@ def plot_heatmap(df):
         height=200,
     )
 
-    if RUN_LOCALLY:
+    if run_locally:
         fig.show()
     else:
         fig.write_image("images/running_heatmap.svg")
     
     fig.write_html("docs/running_heatmap.html")
 
-RUN_LOCALLY = True
-
 if __name__ == "__main__":
-    if RUN_LOCALLY:
+    run_locally = os.getenv("RUN_LOCALLY", "true").lower() in ("true", "1", "yes", "y")
+    if run_locally: # Default
         act = get_activities_from_file()
     else:
-        act = get_activities_from_strava()
+        act = get_activities_from_strava()  
 
-    df = group_by_day(act)
+    df = group_by_day(act, run_locally)
     plot_heatmap(df)
