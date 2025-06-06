@@ -134,7 +134,7 @@ def plot_heatmap(df):
             showgrid=False,
             zeroline=False,
         ),
-        margin=dict(t=40, l=20, r=20, b=20),
+        margin=dict(t=60, l=20, r=20, b=20),
         width=1100,
         height=200,
     )
