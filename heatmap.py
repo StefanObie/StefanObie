@@ -135,8 +135,8 @@ def plot_heatmap(df):
             zeroline=False,
         ),
         margin=dict(t=60, l=20, r=20, b=20),
-        width=1100,
-        height=200,
+        width=1400,
+        height=250,
     )
 
     if run_locally:
