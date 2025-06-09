@@ -35,9 +35,10 @@ def get_activities_from_strava():
     headers = {"Authorization": f"Bearer {get_access_token()}"}
 
     # Activities from the last 365 days, fetched from a Monday to avoid partial weeks
-    last_monday = datetime.now() - pd.DateOffset(days=datetime.now().weekday())
-    last_monday = last_monday.replace(hour=0, minute=0, second=0, microsecond=0)
-    after_param = int(last_monday.timestamp()) - 365*24*60*60
+    year_ago = datetime.now() - pd.DateOffset(years=1)
+    year_ago_monday = year_ago - pd.DateOffset(days=year_ago.weekday())
+    year_ago_monday = year_ago_monday.replace(hour=0, minute=0, second=0, microsecond=0)
+    after_param = int(year_ago_monday.timestamp())
     params = {  
         "after": after_param,
         "per_page": 200, 
