@@ -4,6 +4,9 @@ on:
   schedule: 
     - cron: '0 2 * * *'    # every day at 02:00 UTC
   workflow_dispatch:       # allow manual trigger
+  push:                    # trigger on every new commit
+    branches:
+      - master
 
 jobs:
   build:
