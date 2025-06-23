@@ -143,7 +143,7 @@ def plot_heatmap(df):
     if run_locally:
         fig.show()
     else:
-        fig.write_image("images/running_heatmap.svg")
+        fig.write_image("images/running_heatmap.svg", width=1400, height=250)
     
     fig.write_html("docs/running_heatmap.html")
 
