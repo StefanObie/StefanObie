@@ -134,7 +134,7 @@ def plot_heatmap(df):
             showticklabels=False,
             showgrid=False,
             zeroline=False,
-        ),
+        ), # Add Month Labels
         margin=dict(t=60, l=20, r=20, b=20),
         width=1400,
         height=250,
