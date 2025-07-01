@@ -89,6 +89,14 @@ def plot_heatmap(df):
         z[dow, week] = row['distance']
         text[dow, week] = row['tooltip']
 
+    # --- Add month labels for each week ---
+    # Find the start date of each week
+    week_start_dates = df.groupby('week')['date'].min().sort_index()
+    month_labels = week_start_dates.dt.strftime('%b')
+    # Only show the month label when it changes
+    month_labels = month_labels.where(month_labels != month_labels.shift(), month_labels)
+    month_labels = month_labels.fillna('')
+
     fig = go.Figure(data=go.Heatmap(
         z=z,
         text=text,
@@ -131,10 +139,12 @@ def plot_heatmap(df):
             anchor='free',
         ),
         xaxis=dict(
-            showticklabels=False,
+            tickmode='array',
+            tickvals=list(range(len(month_labels))),
+            ticktext=month_labels.tolist(),
             showgrid=False,
             zeroline=False,
-        ), # Add Month Labels
+        ),
         margin=dict(t=60, l=20, r=20, b=20),
         width=1400,
         height=250,
