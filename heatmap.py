@@ -6,11 +6,21 @@ import requests
 from collections import defaultdict
 import plotly.graph_objects as go
 
+def get_start_date(date=None):
+    # Use the provided date, if any.
+    if date:
+        return pd.to_datetime(date)
+    
+    # Calculate the start date, which is one year ago from today,
+    # adjusted to the previous Monday to ensure full weeks are included.
+    year_ago = datetime.now() - pd.DateOffset(years=1)
+    year_ago_monday = year_ago - pd.DateOffset(days=year_ago.weekday())
+    return year_ago_monday.replace(hour=0, minute=0, second=0, microsecond=0)
 
 def get_activities_from_file():
     df = pd.read_csv("strava_data/strava_activities.csv")
     print(f"Loaded {len(df)} activities from file.")
-    return df.to_dict(orient='records')
+    return df.to_dict(orient='records'), get_start_date('2024-06-03')
 
 def get_access_token():
     client_id = os.getenv("STRAVA_CLIENT_ID")
@@ -33,14 +43,10 @@ def get_access_token():
 def get_activities_from_strava():
     url = "https://www.strava.com/api/v3/athlete/activities"
     headers = {"Authorization": f"Bearer {get_access_token()}"}
+    start_date = get_start_date()
 
-    # Activities from the last 365 days, fetched from a Monday to avoid partial weeks
-    year_ago = datetime.now() - pd.DateOffset(years=1)
-    year_ago_monday = year_ago - pd.DateOffset(days=year_ago.weekday())
-    year_ago_monday = year_ago_monday.replace(hour=0, minute=0, second=0, microsecond=0)
-    after_param = int(year_ago_monday.timestamp())
     params = {  
-        "after": after_param,
+        "after": int(start_date.timestamp()),
         "per_page": 200, 
         "page": 1
     }
@@ -59,9 +65,9 @@ def get_activities_from_strava():
         all_activities.extend(data)
 
     print(f"Total activities fetched: {len(all_activities)}")
-    return all_activities
+    return all_activities, start_date
 
-def group_by_day(activities, run_locally=False):
+def group_by_day(activities):
     daily_distances = defaultdict(float)
     for activity in activities:
         if activity["type"] != "Run":
@@ -79,7 +85,40 @@ def group_by_day(activities, run_locally=False):
     df['tooltip'] = df['date'].dt.strftime('%Y-%m-%d') + ": " + df['distance'].round(1).astype(str) + " km"
     return df
 
-def plot_heatmap(df):
+def get_month_labels(start_date, num_weeks):
+    week_start_dates = [start_date + pd.Timedelta(weeks=w) for w in range(num_weeks)]
+
+    # Find which week each 1st of the month falls into
+    first_dates = []
+    current = pd.Timestamp(start_date)
+    last = week_start_dates[-1] + pd.Timedelta(days=6)
+    while current <= last:
+        first_dates.append(current.replace(day=1))
+        # Move to next month
+        if current.month == 12:
+            current = current.replace(year=current.year+1, month=1, day=1)
+        else:
+            current = current.replace(month=current.month+1, day=1)
+
+    month_labels = [""] * num_weeks
+    prev_year = None
+    # Always set the first column to the month and year of the start_date
+    first_label = start_date.strftime('%b<br>%Y')
+    month_labels[0] = first_label
+    prev_year = start_date.year
+
+    for first in first_dates:
+        week_idx = ((first - start_date).days) // 7
+        if 0 < week_idx < num_weeks:
+            label = first.strftime('%b')
+            if label == "Jan" and first.year != prev_year:
+                label = f"Jan<br>{first.year}"
+            month_labels[week_idx] = label
+            prev_year = first.year
+
+    return month_labels
+
+def plot_heatmap(df, start_date):
     z = np.full((7, df['week'].max() + 1), 0, dtype=float)
     text = np.full(z.shape, '', dtype=object)
 
@@ -89,13 +128,7 @@ def plot_heatmap(df):
         z[dow, week] = row['distance']
         text[dow, week] = row['tooltip']
 
-    # --- Add month labels for each week ---
-    # Find the start date of each week
-    week_start_dates = df.groupby('week')['date'].min().sort_index()
-    month_labels = week_start_dates.dt.strftime('%b')
-    # Only show the month label when it changes
-    month_labels = month_labels.where(month_labels != month_labels.shift(), month_labels)
-    month_labels = month_labels.fillna('')
+    month_labels = get_month_labels(start_date, num_weeks=z.shape[1])
 
     fig = go.Figure(data=go.Heatmap(
         z=z,
@@ -141,7 +174,7 @@ def plot_heatmap(df):
         xaxis=dict(
             tickmode='array',
             tickvals=list(range(len(month_labels))),
-            ticktext=month_labels.tolist(),
+            ticktext=month_labels,
             showgrid=False,
             zeroline=False,
         ),
@@ -160,9 +193,9 @@ def plot_heatmap(df):
 if __name__ == "__main__":
     run_locally = os.getenv("RUN_LOCALLY", "true").lower() in ("true", "1", "yes", "y")
     if run_locally: # Default
-        act = get_activities_from_file()
+        act, start_date = get_activities_from_file()
     else:
-        act = get_activities_from_strava()  
+        act, start_date = get_activities_from_strava()  
 
-    df = group_by_day(act, run_locally)
-    plot_heatmap(df)
+    df = group_by_day(act)
+    plot_heatmap(df, start_date)
