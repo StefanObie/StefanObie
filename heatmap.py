@@ -81,10 +81,12 @@ def group_by_day(activities, start_date):
     df = df.sort_values(by='date')
 
     # Use ISO calendar for week alignment
-    df['iso'] = df['date'].dt.isocalendar()
+    df[['iso_year', 'iso_week', 'iso_day']] = df['date'].dt.isocalendar()
     start_iso = start_date.isocalendar()
-    df['week'] = (df['iso'].year - start_iso.year) * 52 + (df['iso'].week - start_iso.week)
-    df['day_of_week'] = df['iso'].day - 1  # 0 = Monday, as before
+    start_iso_year = start_iso.year
+    start_iso_week = start_iso.week
+    df['week'] = (df['iso_year'] - start_iso_year) * 52 + (df['iso_week'] - start_iso_week)
+    df['day_of_week'] = df['iso_day'] - 1  # 0 = Monday, as before
     df['tooltip'] = df['date'].dt.strftime('%Y-%m-%d') + ": " + df['distance'].round(1).astype(str) + " km"
 
     # Create full date range to include missing weeks/days
@@ -95,9 +97,9 @@ def group_by_day(activities, start_date):
 
     all_dates = pd.date_range(start=start_date, end=end_date, freq='D')
     full_df = pd.DataFrame({'date': all_dates})
-    full_df['iso'] = full_df['date'].dt.isocalendar()
-    full_df['week'] = (full_df['iso'].year - start_iso.year) * 52 + (full_df['iso'].week - start_iso.week)
-    full_df['day_of_week'] = full_df['iso'].day - 1
+    full_df[['iso_year', 'iso_week', 'iso_day']] = full_df['date'].dt.isocalendar()
+    full_df['week'] = (full_df['iso_year'] - start_iso_year) * 52 + (full_df['iso_week'] - start_iso_week)
+    full_df['day_of_week'] = full_df['iso_day'] - 1
 
     # Merge with existing data
     full_df = full_df.merge(df[['date', 'distance', 'tooltip']], on='date', how='left')
