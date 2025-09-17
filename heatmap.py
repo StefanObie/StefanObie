@@ -67,7 +67,7 @@ def get_activities_from_strava():
     print(f"Total activities fetched: {len(all_activities)}")
     return all_activities, start_date
 
-def group_by_day(activities):
+def group_by_day(activities, start_date):
     daily_distances = defaultdict(float)
     for activity in activities:
         if activity["type"] != "Run":
@@ -80,10 +80,31 @@ def group_by_day(activities):
     df["date"] = pd.to_datetime(df["date"])
     df = df.sort_values(by='date')
 
-    df['day_of_week'] = df['date'].dt.weekday  # 0 = Monday
-    df['week'] = ((df['date'] - df['date'].min()).dt.days // 7)
+    # Use ISO calendar for week alignment
+    df['iso'] = df['date'].dt.isocalendar()
+    start_iso = start_date.isocalendar()
+    df['week'] = (df['iso'].year - start_iso.year) * 52 + (df['iso'].week - start_iso.week)
+    df['day_of_week'] = df['iso'].day - 1  # 0 = Monday, as before
     df['tooltip'] = df['date'].dt.strftime('%Y-%m-%d') + ": " + df['distance'].round(1).astype(str) + " km"
-    return df
+
+    # Create full date range to include missing weeks/days
+    if not df.empty:
+        end_date = df['date'].max()
+    else:
+        end_date = start_date + pd.DateOffset(weeks=52)  # Fallback if no data
+
+    all_dates = pd.date_range(start=start_date, end=end_date, freq='D')
+    full_df = pd.DataFrame({'date': all_dates})
+    full_df['iso'] = full_df['date'].dt.isocalendar()
+    full_df['week'] = (full_df['iso'].year - start_iso.year) * 52 + (full_df['iso'].week - start_iso.week)
+    full_df['day_of_week'] = full_df['iso'].day - 1
+
+    # Merge with existing data
+    full_df = full_df.merge(df[['date', 'distance', 'tooltip']], on='date', how='left')
+    full_df['distance'] = full_df['distance'].fillna(0)
+    full_df['tooltip'] = full_df['tooltip'].fillna(full_df['date'].dt.strftime('%Y-%m-%d') + ": 0.0 km")
+    
+    return full_df
 
 def get_month_labels(start_date, num_weeks):
     week_start_dates = [start_date + pd.Timedelta(weeks=w) for w in range(num_weeks)]
@@ -197,5 +218,5 @@ if __name__ == "__main__":
     else:
         act, start_date = get_activities_from_strava()  
 
-    df = group_by_day(act)
+    df = group_by_day(act, start_date)
     plot_heatmap(df, start_date)
