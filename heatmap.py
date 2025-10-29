@@ -125,8 +125,17 @@ def get_month_labels(start_date, num_weeks):
 
     month_labels = [""] * num_weeks
     prev_year = None
-    # Always set the first column to the month and year of the start_date
-    first_label = start_date.strftime('%b<br>%Y')
+
+    # Always set the first label to the month and year
+    start_date_month = start_date.month
+    end_of_first_week_date = start_date + pd.Timedelta(days=6)
+    end_of_first_week_month = end_of_first_week_date.month
+
+    if end_of_first_week_month == start_date_month:
+        first_label = start_date.strftime('%b<br>%Y')
+    else: # If the first week spans two months, use the month at the end of the week
+        first_label = end_of_first_week_date.strftime('%b<br>%Y')
+
     month_labels[0] = first_label
     prev_year = start_date.year
 
