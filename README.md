@@ -39,8 +39,8 @@ I am also an avid runner. Below is a heatmap of my runs over the past year, buil
 
 <!-- Running Heatmap (Past Year) -->
 <p align="center">
-<a href="https://StefanObie.github.io/StefanObie/running_heatmap.html" target="_">
-    <img src="images/running_heatmap.svg" alt="Running Heatmap" width="100%" />
+<a href="https://runheatmap.crossland.co.za/docs/running_heatmap.html" target="_blank">
+    <img src="https://runheatmap.crossland.co.za/images/running_heatmap.svg" alt="Running Heatmap" width="100%" />
 </a>
 </p>
 
