@@ -1,2 +1,5 @@
 strava_data
 notes.md
+.env*
+venv
+__pycache__

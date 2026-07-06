@@ -1,134 +1,94 @@
 import os
 import numpy as np
-import pandas as pd
-from datetime import datetime
-import requests
-from collections import defaultdict
+from datetime import datetime, timedelta
 import plotly.graph_objects as go
+from garminconnect import Garmin
+from dotenv import load_dotenv
 
-def get_start_date(date=None):
-    # Use the provided date, if any.
-    if date:
-        return pd.to_datetime(date)
-    
-    # Calculate the start date, which is one year ago from today,
-    # adjusted to the previous Monday to ensure full weeks are included.
-    year_ago = datetime.now() - pd.DateOffset(years=1)
-    year_ago_monday = year_ago - pd.DateOffset(days=year_ago.weekday())
-    return year_ago_monday.replace(hour=0, minute=0, second=0, microsecond=0)
+load_dotenv(".env.local")
 
-def get_activities_from_file():
-    df = pd.read_csv("strava_data/strava_activities.csv")
-    print(f"Loaded {len(df)} activities from file.")
-    return df.to_dict(orient='records'), get_start_date('2024-06-03')
+NUM_WEEKS = 52
 
-def get_access_token():
-    client_id = os.getenv("STRAVA_CLIENT_ID")
-    client_secret = os.getenv("STRAVA_CLIENT_SECRET")
-    refresh_token = os.getenv("STRAVA_REFRESH_TOKEN")
+def get_date_window():
+    # Rightmost column is the current week. end_date is this week's Sunday
+    # (today itself when today is Sunday); start_date is the Monday 52 weeks
+    # back, so the window spans exactly NUM_WEEKS whole weeks.
+    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    end_date = today + timedelta(days=6 - today.weekday())
+    start_date = end_date - timedelta(days=NUM_WEEKS * 7 - 1)
+    return start_date, end_date
 
-    response = requests.post("https://www.strava.com/oauth/token", data={
-        'client_id': client_id,
-        'client_secret': client_secret,
-        'grant_type': 'refresh_token',
-        'refresh_token': refresh_token,
-    })
+GARMIN_TOKEN_DIR = os.path.expanduser("~/.garmin_tokens")
 
-    if response.status_code != 200:
-        raise Exception(f"Strava token refresh failed: {response.text}")
+def get_garmin_client():
+    client = Garmin(
+        os.getenv("GARMIN_EMAIL"), 
+        os.getenv("GARMIN_PASSWORD"), 
+        prompt_mfa=lambda: input("MFA code: "),
+    )
+    client.login("~/.garminconnect")
 
-    tokens = response.json()
-    return tokens["access_token"]
+    return client
 
-def get_activities_from_strava():
-    url = "https://www.strava.com/api/v3/athlete/activities"
-    headers = {"Authorization": f"Bearer {get_access_token()}"}
-    start_date = get_start_date()
+def get_activities_from_garmin():
+    client = get_garmin_client()
+    start_date, end_date = get_date_window()
 
-    params = {  
-        "after": int(start_date.timestamp()),
-        "per_page": 200, 
-        "page": 1
-    }
+    activities = client.get_activities_by_date(
+        start_date.strftime("%Y-%m-%d"),
+        end_date.strftime("%Y-%m-%d"),
+        "running",
+    )
 
-    all_activities = []
-    for page in range(1, 100):
-        params["page"] = page
-        response = requests.get(url, headers=headers, params=params)
-        
-        if response.status_code != 200:
-            raise Exception(f"Error fetching data: {response.status_code} {response.text}")
-        
-        data = response.json()
-        if not data:
-            break
-        all_activities.extend(data)
+    print(f"Total activities fetched: {len(activities)}")
+    return activities, start_date, end_date
 
-    print(f"Total activities fetched: {len(all_activities)}")
-    return all_activities, start_date
+def build_grid(activities, start_date):
+    # Empty 7 x NUM_WEEKS grid; every cell pre-filled so weeks with no runs
+    # still render. Rows are days (0 = Monday), columns are weeks.
+    z = np.zeros((7, NUM_WEEKS), dtype=float)
+    text = np.empty(z.shape, dtype=object)
+    for week in range(NUM_WEEKS):
+        for dow in range(7):
+            cell_date = start_date + timedelta(days=week * 7 + dow)
+            text[dow, week] = f"{cell_date.strftime('%Y-%m-%d')}: 0.0 km"
 
-def group_by_day(activities, start_date):
-    daily_distances = defaultdict(float)
+    # start_date is a Monday and the window is a whole number of weeks, so a
+    # simple day-offset gives exact (week, day-of-week) placement.
     for activity in activities:
-        if activity["type"] != "Run":
+        if activity["activityType"]["typeKey"] != "running":
             continue
-        date = activity["start_date_local"][:10]
-        distance_km = activity["distance"] / 1000
-        daily_distances[date] += distance_km
+        date = datetime.strptime(activity["startTimeLocal"][:10], "%Y-%m-%d")
+        offset_days = (date - start_date).days
+        if not 0 <= offset_days < NUM_WEEKS * 7:
+            continue
+        week, dow = divmod(offset_days, 7)
+        z[dow, week] += activity["distance"] / 1000
+        text[dow, week] = f"{date.strftime('%Y-%m-%d')}: {z[dow, week]:.1f} km"
 
-    df = pd.DataFrame(list(daily_distances.items()), columns=["date", "distance"])
-    df["date"] = pd.to_datetime(df["date"])
-    df = df.sort_values(by='date')
+    return z, text
 
-    # Use ISO calendar for week alignment
-    df[['iso_year', 'iso_week', 'iso_day']] = df['date'].dt.isocalendar()
-    start_iso = start_date.isocalendar()
-    start_iso_year = start_iso.year
-    start_iso_week = start_iso.week
-    df['week'] = (df['iso_year'] - start_iso_year) * 52 + (df['iso_week'] - start_iso_week)
-    df['day_of_week'] = df['iso_day'] - 1  # 0 = Monday, as before
-    df['tooltip'] = df['date'].dt.strftime('%Y-%m-%d') + ": " + df['distance'].round(1).astype(str) + " km"
-
-    # Create full date range to include missing weeks/days
-    if not df.empty:
-        end_date = df['date'].max()
-    else:
-        end_date = start_date + pd.DateOffset(weeks=52)  # Fallback if no data
-
-    all_dates = pd.date_range(start=start_date, end=end_date, freq='D')
-    full_df = pd.DataFrame({'date': all_dates})
-    full_df[['iso_year', 'iso_week', 'iso_day']] = full_df['date'].dt.isocalendar()
-    full_df['week'] = (full_df['iso_year'] - start_iso_year) * 52 + (full_df['iso_week'] - start_iso_week)
-    full_df['day_of_week'] = full_df['iso_day'] - 1
-
-    # Merge with existing data
-    full_df = full_df.merge(df[['date', 'distance', 'tooltip']], on='date', how='left')
-    full_df['distance'] = full_df['distance'].fillna(0)
-    full_df['tooltip'] = full_df['tooltip'].fillna(full_df['date'].dt.strftime('%Y-%m-%d') + ": 0.0 km")
-    
-    return full_df
-
-def get_month_labels(start_date, num_weeks):
-    week_start_dates = [start_date + pd.Timedelta(weeks=w) for w in range(num_weeks)]
+def get_month_labels(start_date, num_weeks=NUM_WEEKS):
+    week_start_dates = [start_date + timedelta(weeks=w) for w in range(num_weeks)]
 
     # Find which week each 1st of the month falls into
     first_dates = []
-    current = pd.Timestamp(start_date)
-    last = week_start_dates[-1] + pd.Timedelta(days=6)
+    current = start_date
+    last = week_start_dates[-1] + timedelta(days=6)
     while current <= last:
         first_dates.append(current.replace(day=1))
         # Move to next month
         if current.month == 12:
-            current = current.replace(year=current.year+1, month=1, day=1)
+            current = current.replace(year=current.year + 1, month=1, day=1)
         else:
-            current = current.replace(month=current.month+1, day=1)
+            current = current.replace(month=current.month + 1, day=1)
 
     month_labels = [""] * num_weeks
     prev_year = None
 
     # Always set the first label to the month and year
     start_date_month = start_date.month
-    end_of_first_week_date = start_date + pd.Timedelta(days=6)
+    end_of_first_week_date = start_date + timedelta(days=6)
     end_of_first_week_month = end_of_first_week_date.month
 
     if end_of_first_week_month == start_date_month:
@@ -150,40 +110,40 @@ def get_month_labels(start_date, num_weeks):
 
     return month_labels
 
-def plot_heatmap(df, start_date):
-    z = np.full((7, df['week'].max() + 1), 0, dtype=float)
-    text = np.full(z.shape, '', dtype=object)
+def plot_heatmap(z, text, start_date):
+    month_labels = get_month_labels(start_date)
 
-    for _, row in df.iterrows():
-        week = int(row['week'])
-        dow = int(row['day_of_week'])
-        z[dow, week] = row['distance']
-        text[dow, week] = row['tooltip']
+    # Piecewise-linear color mapping. A plain log/linear scale wastes its
+    # dynamic range: log flattens the 6-15 km band, and linear lets the 60 km
+    # ultra squash everyday runs into near-white. Instead we hand-pick km
+    # breakpoints and how much of the [0,1] color range each spans, so the
+    # bulk of the reds is reserved for the 6-15 km "normal run" band while
+    # short and long runs still show, just compressed at the ends.
+    #   0-6 km   -> palest 15% of the scale
+    #   6-15 km  -> 65% of the scale (the important band)
+    #   15-60 km -> darkest 20% (the ultra shows but doesn't distort)
+    break_km    = [0.0, 4.0, 20.0, 60.0]
+    break_color = [0.0, 0.20, 0.80, 1.00]
 
-    month_labels = get_month_labels(start_date, num_weeks=z.shape[1])
+    z_color = np.interp(z, break_km, break_color)
 
+    # Colorbar ticks at real km values, positioned by the same mapping.
+    tick_km = [0, 5, 10, 15, 20, 60]
     fig = go.Figure(data=go.Heatmap(
-        z=z,
+        z=z_color,
+        zmin=0.0,
+        zmax=1.0,
         text=text,
         hoverinfo='text',
-        # hoverinfo='skip',
-        # colorscale='YlOrRd',  # Yellow to Red
-        # colorscale='Blues',  # Blue shades
-        # colorscale='Greens',  # Green shades
         colorscale='Reds',  # Red shades
-        # More options: 'Viridis', 'Cividis', 'Magma', 'Inferno'
-        # colorscale='Magma',
-        # reverse the color scale
-        # reversescale=True,
-        # colorscale=[
-        #     [0, 'lightgrey'],   # 0 km = light grey
-        #     [0.01, 'rgb(255,255,204)'],  # start of YlOrRd
-        #     [1, 'rgb(200,0,38)']         # end of YlOrRd
-        # ],
         showscale=True,
         xgap=2,
         ygap=2,
-        colorbar=dict(title='Distance [km]'),
+        colorbar=dict(
+            title='Distance [km]',
+            tickvals=[float(np.interp(k, break_km, break_color)) for k in tick_km],
+            ticktext=[str(k) for k in tick_km],
+        ),
     ))
 
     fig.update_layout(
@@ -215,19 +175,10 @@ def plot_heatmap(df, start_date):
         height=250,
     )
 
-    if run_locally:
-        fig.show()
-    else:
-        fig.write_image("images/running_heatmap.svg", width=1400, height=250)
-    
+    fig.write_image("images/running_heatmap.svg", width=1400, height=250)
     fig.write_html("docs/running_heatmap.html")
 
 if __name__ == "__main__":
-    run_locally = os.getenv("RUN_LOCALLY", "true").lower() in ("true", "1", "yes", "y")
-    if run_locally: # Default
-        act, start_date = get_activities_from_file()
-    else:
-        act, start_date = get_activities_from_strava()  
-
-    df = group_by_day(act, start_date)
-    plot_heatmap(df, start_date)
+    activities, start_date, end_date = get_activities_from_garmin()
+    z, text = build_grid(activities, start_date)
+    plot_heatmap(z, text, start_date)

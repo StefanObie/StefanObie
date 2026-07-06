@@ -34,10 +34,10 @@ I am <code>Stefan Oberholzer</code>, a Computer Engineer driven by a passion for
 <br><br>
 I have experience in a variety of programming languages, including Python for rapid development and C++ for low-level projects. I am eager to expand my skill set and take on new challenges, particularly in fields like embedded systems and software engineering.
 <br><br>
-I am also an avid runner. Below is a heatmap of my runs over the past year, built using the Strava API and updated daily.
+I am also an avid runner. Below is a heatmap of my runs over the past year, built using the Garmin Connect API and updated twice a day.
 </p>
 
-<!-- Running Heatmap (Last 365 Days) -->
+<!-- Running Heatmap (Past Year) -->
 <p align="center">
 <a href="https://StefanObie.github.io/StefanObie/running_heatmap.html" target="_">
     <img src="images/running_heatmap.svg" alt="Running Heatmap" width="100%" />
